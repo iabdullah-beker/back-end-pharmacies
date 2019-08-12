@@ -14,13 +14,14 @@ class OrderController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'image'=>'required'
+            'image'=>'required|max:2048',
+            'image.*' => 'mimes:jpeg,png,jpg,gif,svg'
         ]);
         $insert = array();
         if ($image = $request->file('image')) {
             foreach ($image as $files) {
 
-            $destinationPath = 'orders/images/'; // upload path
+            $destinationPath = 'images/'; // upload path
             // $profileImage =  md5_file($files->getRealPath())->getClientOriginalExtension();
 
             $ImageName =  auth()->user()->name . md5_file($files->getRealPath()) . "." . $files->getClientOriginalExtension();

@@ -10,6 +10,10 @@ class Cosmetic extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function group(){
+        return $this->belongsTo(Group::class);
+    }
+
     public function packages(){
         return $this->belongsToMany(Package::class);
     }
@@ -19,6 +23,6 @@ class Cosmetic extends Model
     }
 
     protected $fillable =[
-        'name','price','image','description'
+        'name','price','image','description','category','group_id'
     ];
 }

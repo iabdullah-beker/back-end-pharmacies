@@ -45,11 +45,14 @@ Route::group(['middleware' =>['auth:api', 'scope:user,moderator,admin']] ,functi
     Route::get('/acceptedads' , 'Api\AdsController@getAcceptedAds');
     Route::get('/getpackages' , 'Api\PackageController@getPackages');
     Route::get('/getpackagedata/{id}' , 'Api\PackageController@getPackageData');
+    Route::get('/getgroup/{id}', 'Api\GroupController@getGroup');
+    Route::get('/getcategory', 'Api\CategoryController@getCategory');
+    Route::post('/upload', 'Api\OrderController@upload');
+
 });
 
 // User Routes
 Route::group(['middleware' => ['auth:api', 'scope:user']], function () {
-    Route::post('/upload', 'Api\OrderController@upload');
     Route::post('/addorder', 'Api\OrderController@addOrder');
     Route::get('/getorderuser', 'Api\OrderController@getOrderForUser');
     Route::post('/addcomplaint', 'Api\ComplaintController@addComplaint');
@@ -74,7 +77,6 @@ Route::group(['middleware' => ['auth:api', 'scope:vendor']], function () {
     Route::post('/pharmacyavailible', 'Api\PharmacyController@pharmacyAvailible');
     Route::post('/addalarm' , 'Api\AlarmController@addAlarm');
     Route::get('/getorderwithratevendor', 'Api\RateController@getOrdersWithRateForVendor');
-    Route::post('/addads' , 'Api\AdsController@addAds');
 
 });
 
@@ -88,13 +90,14 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/deactivepromo/{id}' , 'Api\PromoController@DeactivePromo');
     Route::get('/getallcomplaints', 'Api\ComplaintController@getAllComplaints');
     Route::get('/getorderwithrate', 'Api\RateController@getOrdersWithRate');
-    Route::post('/upload', 'Api\OrderController@upload');
     Route::post('/addcosmetic', 'Api\CosmeticController@addCosmetic');
     Route::post('/acceptads' , 'Api\AdsController@AcceptAds');
     Route::post('/rejectads' , 'Api\AdsController@RejectAds');
     Route::get('/pendingads' , 'Api\AdsController@getPendingAds');
     Route::post('/addpackage' , 'Api\PackageController@addPackage');
-
+    Route::post('/addads' , 'Api\AdsController@addAds');
+    Route::post('/addcategory', 'Api\CategoryController@addCategory');
+    Route::post('/addgroup', 'Api\GroupController@addGroup');
 
 });
 

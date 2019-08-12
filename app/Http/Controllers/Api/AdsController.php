@@ -10,16 +10,14 @@ class AdsController extends Controller
 {
     public function addAds(Request $request)
     {
-        if(!isActive()){
-            return response()->json(['failed'=>'your pharmacy not active right now '],404);
-        }
+
         $validateAd = $request->validate([
             'content' => 'required',
             'image' => 'nullable',
         ]);
 
-        $pharmacy = auth()->user()->pharmacy;
-        $ad = $pharmacy->ads()->create($validateAd);
+        $user = auth()->user();
+        $ad = $user->ads()->create($validateAd);
         return response()->json($ad, 201);
     }
 

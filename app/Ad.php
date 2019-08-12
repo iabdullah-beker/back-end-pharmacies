@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ad extends Model
 {
-    public function pharmacy()
+    public function user()
     {
-        return $this->belongsTo(Pharmacy::class);
+        return $this->belongsTo(User::class);
     }
 
 

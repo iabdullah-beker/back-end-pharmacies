@@ -8,13 +8,19 @@ use App\Cosmetic;
 
 class CosmeticController extends Controller
 {
+
+
+
+
+
     public function addCosmetic(Request $request)
     {
         $validatedCosmetic = $request->validate([
             'name' => 'required|unique:cosmetics',
             'price' => 'required|numeric',
             'image' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'group_id' => 'required'
         ]);
 
         $cosmetic = auth()->user()->cosmetic()->create($validatedCosmetic);

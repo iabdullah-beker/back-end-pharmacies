@@ -42,13 +42,16 @@ class User extends Authenticatable
     public function package(){
         return $this->hasMany(Package::class);
     }
+    public function ads (){
+        return $this->hasMany(Ad::class);
+    }
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','phone','address'
+        'name', 'email', 'password','phone','address','photo','gender','disease','dob'
     ];
 
     /**

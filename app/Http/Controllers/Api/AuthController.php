@@ -20,6 +20,10 @@ class AuthController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'numeric|min:11|required',
+            'disease' => 'nullable',
+            'dob' => 'date_format:"Y-m-d"|required',
+            'gender' => 'required',
+            'photo' => 'nullable'
         ]);
         $validatedData['password'] = bcrypt($validatedData['password']);
         $user = new User;
@@ -41,7 +45,7 @@ class AuthController extends Controller
             $token = Auth::user()->createToken('My Token', [$role])->accessToken;
             return response()->json(['token' => $token], 200);
         } else {
-            return response()->json(['status', 'Unauthorized'], 401);
+            return response()->json(['status'=> 'Unauthorized'], 401);
         }
     }
 }

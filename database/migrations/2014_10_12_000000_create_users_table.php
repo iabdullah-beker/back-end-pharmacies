@@ -20,7 +20,11 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone');
+            $table->string('gender')->default('Male');
             $table->string('address');
+            $table->string('photo')->nullable();
+            $table->string('disease')->nullable(); // مرض
+            $table->date('dob')->nullable();
             $table->rememberToken();
             $table->enum('role',['user','vendor','moderator','admin'])->default('user');
             $table->boolean('active')->default(0);

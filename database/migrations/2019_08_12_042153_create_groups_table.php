@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCosmeticsTable extends Migration
+class CreateGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,10 @@ class CreateCosmeticsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
-            $table->string('image');
-            $table->bigIncrements('group_id');
-            $table->text('description');
-            $table->double('price');
+            $table->bigInteger('category_id');
             $table->timestamps();
         });
     }
@@ -33,6 +28,6 @@ class CreateCosmeticsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics');
+        Schema::dropIfExists('groups');
     }
 }
