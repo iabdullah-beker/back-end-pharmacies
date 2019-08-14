@@ -22,12 +22,12 @@ Route::post('login', 'Api\AuthController@login');
 Route::post('/addpharmacy' , 'Api\PharmacyController@addPharmacy');
 Route::post('/checkemail','Api\PharmacyController@checkEmail');
 Route::post('/checkphone','Api\PharmacyController@checkPhone');
-Route::get('post/{id}', function($id){
-   $order= App\Order::find($id);
-   $order->status = 'rejected';
-   $order->save();
-   return response()->json($order);
-});
+// Route::get('post/{id}', function($id){
+//    $order= App\Order::find($id);
+//    $order->status = 'rejected';
+//    $order->save();
+//    return response()->json($order);
+// });
 // All Routes
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/test', function () {
@@ -41,14 +41,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 //User and Admin Routes
 Route::group(['middleware' =>['auth:api', 'scope:user,moderator,admin']] ,function(){
-    Route::get('/getcosmetic', 'Api\CosmeticController@getCosmetic');
+    Route::get('/getcosmetic/{id}', 'Api\CosmeticController@getCosmetic');
     Route::get('/acceptedads' , 'Api\AdsController@getAcceptedAds');
     Route::get('/getpackages' , 'Api\PackageController@getPackages');
     Route::get('/getpackagedata/{id}' , 'Api\PackageController@getPackageData');
     Route::get('/getgroup/{id}', 'Api\GroupController@getGroup');
     Route::get('/getcategory', 'Api\CategoryController@getCategory');
     Route::post('/upload', 'Api\OrderController@upload');
-
 });
 
 // User Routes
@@ -58,7 +57,6 @@ Route::group(['middleware' => ['auth:api', 'scope:user']], function () {
     Route::post('/addcomplaint', 'Api\ComplaintController@addComplaint');
     Route::post('/addrate', 'Api\RateController@addRate');
     Route::post('/nearest' , 'Api\PharmacyController@findNearestPharmacy');
-
 
 });
 

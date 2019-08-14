@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Cosmetic;
+use App\Group;
 
 class CosmeticController extends Controller
 {
@@ -28,9 +29,11 @@ class CosmeticController extends Controller
         return response()->json($cosmetic,201);
     }
 
-    public function getCosmetic() {
-        $cosmetic = Cosmetic::paginate(10);
-
+    public function getCosmetic($id) {
+        $group = Group::find($id);
+        if(!$group)
+        return response()->json(['error'=>'not found'],404);
+        $cosmetic = $group->cosmetics;
         return response()->json($cosmetic,200);
     }
 }

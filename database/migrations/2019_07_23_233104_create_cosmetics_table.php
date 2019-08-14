@@ -19,7 +19,8 @@ class CreateCosmeticsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
             $table->string('image');
-            $table->bigIncrements('group_id');
+            $table->unsignedBigInteger('group_id');
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
             $table->text('description');
             $table->double('price');
             $table->timestamps();

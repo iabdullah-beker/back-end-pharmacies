@@ -35,7 +35,6 @@ class OrderController extends Controller
     // to add new order
     public function addOrder(Request $request){
        $orderData = $request->validate([
-            'order_type'=>'required',
             'address'=>'required',
             'image'=>'nullable',
             'name'=>'nullable',
@@ -46,7 +45,7 @@ class OrderController extends Controller
         ]);
         // $orderData['image'] = json_decode($orderData['image']);
         // $order = new Order;
-
+        $orderData['order_type'] = 'medication';
        $order =  auth()->user()->order()->create($orderData);
 
        if($request['cosmetic']!= null)
