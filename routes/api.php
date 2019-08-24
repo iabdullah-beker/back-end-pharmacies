@@ -30,12 +30,9 @@ Route::post('/checkphone','Api\PharmacyController@checkPhone');
 // });
 // All Routes
 Route::group(['middleware' => ['auth:api']], function () {
-    Route::get('/test', function () {
-        return App\Order::with('pharmacy')->get()->where('user_id', auth()->user()->id);
-    });
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('logout', 'Api\UserController@logout');
+    Route::post('updatedata' , 'Api\UserController@updateData');
+    Route::post('changepassword' , 'Api\UserController@changePassword');
 });
 
 
@@ -77,6 +74,7 @@ Route::group(['middleware' => ['auth:api', 'scope:vendor']], function () {
     Route::post('/pharmacyavailible', 'Api\PharmacyController@pharmacyAvailible');
     Route::post('/addalarm' , 'Api\AlarmController@addAlarm');
     Route::get('/getorderwithratevendor', 'Api\RateController@getOrdersWithRateForVendor');
+    Route::post('updatepharmacy' , 'Api\UserController@updatePharmacyData');
 
 });
 
@@ -106,6 +104,7 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/getpendingpharmacy', 'Api\PharmacyController@getPendingPharmacy');
     Route::get('/searchuserbyid/{id}', 'Api\UserController@searchUserById');
     Route::get('/searchvendorbyid/{id}', 'Api\UserController@searchVendorById');
+    Route::get('/countnewpharmacy', 'Api\UserController@numberNewPharmacy');
 
 });
 

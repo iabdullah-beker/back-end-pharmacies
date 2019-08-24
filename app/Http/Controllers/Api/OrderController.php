@@ -87,7 +87,7 @@ class OrderController extends Controller
         $pharmacy = auth()->user()->pharmacy;
         if(!$pharmacy)
         return response()->json(['error'=>'this user not related to pharmacy']);
-        $orders = $pharmacy->order;
+        $orders = $pharmacy->order()->paginate(20);
         return response()->json($orders);
     }
 
@@ -97,7 +97,7 @@ class OrderController extends Controller
     }
 
     public function getAllOrdersForAdmin(){
-        $orders = Order::paginate(10);
+        $orders = Order::with('pharmacy')->with('user')->paginate(10);
         // $orders->name = json_decode($orders->name);
         return response()->json($orders,200);
     }
