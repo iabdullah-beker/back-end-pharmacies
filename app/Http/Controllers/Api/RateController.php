@@ -24,7 +24,7 @@ class RateController extends Controller
             }
             return response()->json(['error' => 'you can\'t rate this order because it\'s not related to you '], 401);
         }
-        return response()->json(['error' => 'you already rated this order'], 403);
+        return response()->json(['error' => 'you already rated this order'], 200);
     }
 
     public function getOrdersWithRate()

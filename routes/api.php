@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth:api', 'scope:vendor']], function () {
     //     return response()->json(['failed'=>'your pharmacy not active right now '],404);
     // }
     Route::get('/getordervendor', 'Api\OrderController@getOrderForVendor');
+    Route::get('/getacceptedordervendor', 'Api\OrderController@getAcceptedOrder');
+    Route::get('/getrejectedordervendor', 'Api\OrderController@getRejectedOrder');
     Route::get('/getpendingorder', 'Api\OrderController@getPendingOrder');
     Route::post('/acceptorder', 'Api\OrderController@onAcceptOrder');
     Route::post('/rejectorder', 'Api\OrderController@onRejectOrder');
@@ -96,6 +98,14 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::post('/addads' , 'Api\AdsController@addAds');
     Route::post('/addcategory', 'Api\CategoryController@addCategory');
     Route::post('/addgroup', 'Api\GroupController@addGroup');
+    Route::get('/getnormalusers', 'Api\UserController@getNormalUsers');
+    Route::get('/searchuserbyname/{name}', 'Api\UserController@searchUserByName');
+    Route::get('/searchuserbydate/{start}/{end}', 'Api\UserController@searchUserByDate');
+    Route::get('/getvendors', 'Api\UserController@getVendors');
+    Route::get('/searchvendorbyname/{name}', 'Api\UserController@searchVendorByName');
+    Route::get('/getpendingpharmacy', 'Api\PharmacyController@getPendingPharmacy');
+    Route::get('/searchuserbyid/{id}', 'Api\UserController@searchUserById');
+    Route::get('/searchvendorbyid/{id}', 'Api\UserController@searchVendorById');
 
 });
 

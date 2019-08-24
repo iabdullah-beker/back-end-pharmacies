@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('name')->nullable();
             $table->text('image')->nullable();
             // $table->text('cosmetic')->nullable();
-            $table->string('status')->default('pending');
+            $table->string('status')->default('3');
             $table->string('address');
             $table->string('phone');
             $table->double('price')->default(0);

@@ -85,13 +85,15 @@ class OrderController extends Controller
             return response()->json(['failed'=>'your pharmacy not active right now '],404);
         }
         $pharmacy = auth()->user()->pharmacy;
+        if(!$pharmacy)
+        return response()->json(['error'=>'this user not related to pharmacy']);
         $orders = $pharmacy->order;
-        return response()->json(['orders'=>$orders]);
+        return response()->json($orders);
     }
 
     public function getOrderForUser(){
         $orders = auth()->user()->order;
-        return response()->json(['orders'=>$orders]);
+        return response()->json($orders);
     }
 
     public function getAllOrdersForAdmin(){
@@ -106,8 +108,27 @@ class OrderController extends Controller
             return response()->json(['failed'=>'your pharmacy not active right now '],404);
         }
         $pharmacy_id = auth()->user()->pharmacy->id;
-        $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','pending')->get();
+        $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','3')->get();
+        return response()->json($orders,200);
+    }
 
+        // when vendor open website , get the accepted orders that related to him!
+        public function getAcceptedOrder(){
+            if(!auth()->user()->active) {
+                return response()->json(['failed'=>'your pharmacy not active right now '],404);
+            }
+            $pharmacy_id = auth()->user()->pharmacy->id;
+            $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','1')->get();
+            return response()->json($orders,200);
+        }
+
+            // when vendor open website , get the rejected orders that related to him!
+    public function getRejectedOrder(){
+        if(!auth()->user()->active) {
+            return response()->json(['failed'=>'your pharmacy not active right now '],404);
+        }
+        $pharmacy_id = auth()->user()->pharmacy->id;
+        $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','2')->get();
         return response()->json($orders,200);
     }
 
@@ -122,7 +143,7 @@ class OrderController extends Controller
         ]);
 
         $order = Order::find($validatedData['order_id']);
-        $order->status = 'accepted';
+        $order->status = '1';
         $order->price = $validatedData['price'];
         $order->save();
         return response()->json(['success'=>'order accepted successfully'],200);
@@ -138,7 +159,7 @@ class OrderController extends Controller
 
         $order = Order::find($validatedData['order_id']);
 
-        $order->status = 'rejected';
+        $order->status = '2';
 
         $order->save();
 

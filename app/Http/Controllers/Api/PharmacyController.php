@@ -14,15 +14,15 @@ class PharmacyController extends Controller
     public function checkEmail(Request $request){
         $user = User::where('email',$request->email)->first();
         if($user)
-             return response()->json(false,403);
-        return response()->json(true,200);
+             return response()->json(['status'=>false],200);
+        return response()->json(['status'=>true],200);
     }
 
     public function checkPhone(Request $request){
         $user = User::where('phone',$request->phone)->first();
         if($user)
-             return response()->json(false,403);
-        return response()->json(true,200);
+             return response()->json(['status'=>false],200);
+        return response()->json(['status'=>true],200);
     }
 
     public function addPharmacy(Request $request)
@@ -35,10 +35,13 @@ class PharmacyController extends Controller
             'phone' => 'required|numeric',
             'user_name' => 'required',
             'user_address' => 'required',
-            'user_phone' => 'required|unique:users,phone',
+            'user_phone' => 'required',
             'user_password' => 'required',
-            'user_email' => 'required|unique:users,email',
+            'user_email' => 'required',
         ]);
+        $Data = User::where('email',$validatedData['user_email'])->first();
+        if($Data)
+            return response()->json(['status'=>false,'message'=>'account already use'],200);
         $user = new User;
         $user->name = $validatedData['user_name'];
         $user->email = $validatedData['user_email'];
@@ -49,7 +52,7 @@ class PharmacyController extends Controller
         $user->save();
         $token = $user->createToken('My Token', ['vendor'])->accessToken;
         $pharmacy =  $user->pharmacy()->create($validatedData);
-            return response()->json($token, 201);
+            return response()->json(['status'=>true,'token'=>$token], 201);
 
         // if($user == null)
         //     return response()->json(['error'=>'user not found'],404);
@@ -63,7 +66,16 @@ class PharmacyController extends Controller
     }
 
     public function getPharmacy(){
-        $pharmacy = Pharmacy::all();
+        $pharmacy = Pharmacy::whereHas("user", function($q){
+            $q->where("active","=",1);
+         })->with('user')->withCount('order')->get();
+        return response()->json($pharmacy,200);
+    }
+
+    public function getPendingPharmacy(){
+        $pharmacy = Pharmacy::whereHas("user", function($q){
+            $q->where("active","=",0);
+         })->with('user')->get();
         return response()->json($pharmacy,200);
     }
 
@@ -82,7 +94,7 @@ class PharmacyController extends Controller
 
 
         if(empty($data)) {
-            return response()->json(['error','there are no pharmacies nearest of you'],403);
+            return response()->json(['error','there are no pharmacies nearest of you'],200);
           }
 
           $ids = [];

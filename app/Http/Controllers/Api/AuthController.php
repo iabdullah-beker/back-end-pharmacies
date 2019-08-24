@@ -30,7 +30,7 @@ class AuthController extends Controller
         $user->create($validatedData);
         $token = $user->createToken('My Token', ['user'])->accessToken;
 
-        return response()->json(['token' => $token], 201);
+        return response()->json(['status'=>true,'token' => $token], 201);
     }
 
     public function login(Request $request)
@@ -43,9 +43,9 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])) {
             $role = Auth::user()->role;
             $token = Auth::user()->createToken('My Token', [$role])->accessToken;
-            return response()->json(['token' => $token], 200);
+            return response()->json(['status'=>true,'token' => $token], 200);
         } else {
-            return response()->json(['status'=> 'Unauthorized'], 401);
+            return response()->json(['status'=> false], 401);
         }
     }
 }
