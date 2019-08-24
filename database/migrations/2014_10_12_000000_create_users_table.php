@@ -25,6 +25,8 @@ class CreateUsersTable extends Migration
             $table->string('photo')->nullable();
             $table->string('disease')->nullable(); // مرض
             $table->date('dob')->nullable();
+            $table->double('lat')->default(0);
+            $table->double('lng')->default(0);
             $table->rememberToken();
             $table->enum('role',['user','vendor','moderator','admin'])->default('user');
             $table->boolean('active')->default(0);

@@ -18,6 +18,8 @@ class AuthController extends Controller
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
             'name' => 'required',
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
             'address' => 'required',
             'phone' => 'numeric|min:11|required',
             'disease' => 'nullable',
