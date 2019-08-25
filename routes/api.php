@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/searchuserbyid/{id}', 'Api\UserController@searchUserById');
     Route::get('/searchvendorbyid/{id}', 'Api\UserController@searchVendorById');
     Route::get('/countnewpharmacy', 'Api\UserController@numberNewPharmacy');
+    Route::get('/orderbyuserid/{id}', 'Api\OrderController@getOrderByUserId');
+    Route::post('/acceptpharmacy', 'Api\PharmacyController@aceeptPharmacy');
+    Route::post('/rejectpharmacy', 'Api\PharmacyController@rejectPharmacy');
 
 });
 

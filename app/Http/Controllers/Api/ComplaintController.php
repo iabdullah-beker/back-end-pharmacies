@@ -20,10 +20,10 @@ class ComplaintController extends Controller
     }
 
     public function getAllComplaints(){
-        $complaints = Complaint::paginate(10);
+        $complaints = Complaint::paginate(20);
 
         return response()->json($complaints,200);
     }
 
-    
+
 }

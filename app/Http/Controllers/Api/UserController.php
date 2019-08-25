@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function getNormalUsers(){
-        $users = User::where('role','user')->get();
+        $users = User::where('role','user')->paginate(20);
 
         return response()->json($users);
     }
@@ -32,7 +32,7 @@ class UserController extends Controller
 
 
     public function getVendors(){
-        $vendors = User::where('role','vendor')->with('pharmacy')->get();
+        $vendors = User::where('role','vendor')->with('pharmacy')->paginate(20);
 
         return response()->json($vendors);
     }

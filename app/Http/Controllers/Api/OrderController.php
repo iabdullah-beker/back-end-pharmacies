@@ -118,7 +118,7 @@ class OrderController extends Controller
                 return response()->json(['failed'=>'your pharmacy not active right now '],404);
             }
             $pharmacy_id = auth()->user()->pharmacy->id;
-            $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','1')->get();
+            $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','1')->paginate(20);
             return response()->json($orders,200);
         }
 
@@ -128,7 +128,7 @@ class OrderController extends Controller
             return response()->json(['failed'=>'your pharmacy not active right now '],404);
         }
         $pharmacy_id = auth()->user()->pharmacy->id;
-        $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','2')->get();
+        $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','2')->paginate(20);
         return response()->json($orders,200);
     }
 
@@ -168,5 +168,9 @@ class OrderController extends Controller
     }
 
 
+    public function getOrderByUserId($id){
+        $orders = Order::where('user_id',$id)->paginate(20);
+        return response()->json($orders);
+    }
 
 }

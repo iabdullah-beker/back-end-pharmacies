@@ -52,14 +52,14 @@ class AdsController extends Controller
     public function getPendingAds()
     {
         $now = date('Y-m-d');
-        $ads = Ad::where('accepted', 0)->where('expireDate', '>=', $now)->get();
+        $ads = Ad::where('expireDate', '>=', $now)->get();
         return response()->json($ads, 200);
     }
 
     public function getAcceptedAds()
     {
         $now = date('Y-m-d');
-        $ads = Ad::where('accepted', 1)->where('expireDate', '>=', $now)->get();
+        $ads = Ad::where('expireDate', '>=', $now)->get();
         return response()->json($ads, 200);
     }
 }

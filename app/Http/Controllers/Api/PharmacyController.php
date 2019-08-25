@@ -68,14 +68,14 @@ class PharmacyController extends Controller
     public function getPharmacy(){
         $pharmacy = Pharmacy::whereHas("user", function($q){
             $q->where("active","=",1);
-         })->with('user')->withCount('order')->get();
+         })->with('user')->withCount('order')->paginate(20);
         return response()->json($pharmacy,200);
     }
 
     public function getPendingPharmacy(){
         $pharmacy = Pharmacy::whereHas("user", function($q){
             $q->where("active","=",0);
-         })->with('user')->get();
+         })->with('user')->paginate(20);
         return response()->json($pharmacy,200);
     }
 
@@ -152,5 +152,38 @@ class PharmacyController extends Controller
         $pharmacy->save();
 
         return response()->json(['success','pharmacy is availible right now '],200);
+    }
+
+    public function aceeptPharmacy(Request $request){
+        $validatedData = $request->validate([
+            'user_id' => 'required|numeric'
+        ]);
+
+        $user = User::find($validatedData['user_id']);
+        if(!isVendor($user))
+        return response()->json(['status'=>false,'msg'=>'this user not vendor'],200);
+
+        $user->active = 1;
+
+        $user->save();
+
+        return response()->json(['status'=>true,'msg'=>'pharmacy is active now'],200);
+
+    }
+
+    public function rejectPharmacy(Request $request){
+        $validatedData = $request->validate([
+            'user_id' => 'required|numeric'
+        ]);
+
+        $user = User::find($validatedData['user_id']);
+        if(!isVendor($user))
+        return response()->json(['status'=>false,'msg'=>'this user not vendor'],200);
+        $pharmacy = $user->pharmacy;
+        $pharmacy->delete();
+        $user->delete();
+
+        return response()->json(['status'=>true,'msg'=>'pharmacy is deleted now'],200);
+
     }
 }
