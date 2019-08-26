@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function getNormalUsers(){
-        $users = User::where('role','user')->paginate(20);
+        $users = User::where('role','user')->withCount('order')->paginate(20);
 
         return response()->json($users);
     }
