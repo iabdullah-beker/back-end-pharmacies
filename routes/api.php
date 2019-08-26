@@ -118,6 +118,10 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
 
 // Admin Routes
 Route::group(['middleware' => ['auth:api', 'scope:admin']], function () {
+    Route::post('/addadmin', 'Api\UserController@addAdmin');
+    Route::post('/updaterole', 'Api\UserController@updateRole');
+    Route::get('/getadmin', 'Api\UserController@getAdmin');
+    Route::get('/getmoderator', 'Api\UserController@getModerator');
 
 });
 

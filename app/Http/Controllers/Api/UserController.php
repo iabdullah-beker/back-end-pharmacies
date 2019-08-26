@@ -185,6 +185,53 @@ class UserController extends Controller
         return response()->json(['count'=>$count]);
     }
 
+    public function addAdmin(Request $request){
+        $validatedData = $request->validate([
+            'email' => 'required|unique:users|max:100|email',
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required',
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'numeric|min:11|required',
+            'dob' => 'date_format:"Y-m-d"|required',
+            'gender' => 'nullable',
+            'photo' => 'nullable',
+            'role' =>'required|in:admin,moderator'
+        ]);
+        $validatedData['password'] = bcrypt($validatedData['password']);
+        $user = new User;
+        $validatedData['active'] = '1';
+        $validatedData['role'] = $validatedData['role'];
+        $user->create($validatedData);
+
+        return response()->json(['status'=>true],201);
+    }
+
+    public function updateRole(Request $request){
+        $validatedData = $request->validate([
+            'role' =>'required|in:admin,moderator',
+            'user_id' =>'required|numeric'
+        ]);
+            $user = User::find($validatedData['user_id']);
+            $user->role = $validatedData['role'];
+            $user->save();
+            return response()->json(['status'=>true],200);
+    }
+
+    public function getModerator()
+    {
+        $moderators = User::where('role','moderator')->paginate(20);
+
+        return response()->json($moderators,200);
+    }
+
+    public function getAdmin()
+    {
+        $admins = User::where('role','admin')->paginate(20);
+
+        return response()->json($admins,200);
+    }
+
     public function logout() {
         $accessToken = Auth::user()->token();
         DB::table('oauth_refresh_tokens')
