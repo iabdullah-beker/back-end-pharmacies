@@ -100,10 +100,7 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::post('/addcategory', 'Api\CategoryController@addCategory');
     Route::post('/addgroup', 'Api\GroupController@addGroup');
     Route::get('/getnormalusers', 'Api\UserController@getNormalUsers');
-    Route::get('/searchuserbyname/{name}', 'Api\UserController@searchUserByName');
-    Route::get('/searchuserbydate/{start}/{end}', 'Api\UserController@searchUserByDate');
     Route::get('/getvendors', 'Api\UserController@getVendors');
-    Route::get('/searchvendorbyname/{name}', 'Api\UserController@searchVendorByName');
     Route::get('/getpendingpharmacy', 'Api\PharmacyController@getPendingPharmacy');
     Route::get('/searchuserbyid/{id}', 'Api\UserController@searchUserById');
     Route::get('/searchvendorbyid/{id}', 'Api\UserController@searchVendorById');
@@ -111,6 +108,10 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/orderbyuserid/{id}', 'Api\OrderController@getOrderByUserId');
     Route::post('/acceptpharmacy', 'Api\PharmacyController@aceeptPharmacy');
     Route::post('/rejectpharmacy', 'Api\PharmacyController@rejectPharmacy');
+    Route::post('/searchuser', 'Api\UserController@searchUser');
+    Route::post('/searchvendor', 'Api\UserController@searchVendor');
+    Route::post('/searchpending', 'Api\UserController@searchPending');
+    Route::get('/getorderpharmacy/{id}', 'Api\OrderController@getOrderPharmacy');
 
 });
 

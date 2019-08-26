@@ -1,5 +1,7 @@
 <?php
 
+use App\User;
+
 function getCreat($query)
 {
 
@@ -44,6 +46,35 @@ function isModerator($user)
 
     return false;
 }
+
+// search
+
+ function searchByName($name , $role){
+    $vendor = User::where('name','LIKE','%'.$name.'%')->where('role',$role)->get();
+
+    return response()->json($vendor);
+}
+
+ function searchByDate($start,$end , $role){
+    $user = User::whereBetween('created_at',array($start, $end))->where('role',$role)->get();
+
+    return response()->json($user);
+}
+
+//  function searchUserByName($name){
+//     $user = User::where('name','LIKE','%'.$name.'%')->where('role','user')->get();
+
+//     return response()->json($user);
+// }
+
+//  function searchUserByDate($start,$end){
+//     $user = User::whereBetween('created_at',array($start, $end))->where('role','user')->get();
+
+//     return response()->json($user);
+// }
+
+
+
 
 function pushOrderNotification($order)
 {

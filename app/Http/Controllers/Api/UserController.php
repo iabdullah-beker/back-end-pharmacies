@@ -18,30 +18,37 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    public function searchUserByName($name){
-        $user = User::where('name','LIKE','%'.$name.'%')->where('role','user')->get();
 
-        return response()->json($user);
-    }
+    public function searchUser(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'nullable',
+            'start' => 'date_format:"Y-m-d"|nullable',
+            'end' => 'date_format:"Y-m-d"|nullable',
+        ]);
 
-    public function searchUserByDate($start,$end){
-        $user = User::whereBetween('created_at',array($start, $end))->where('role','user')->get();
+        if( ($request['start'] == null || $request['end'] == null) && $request['name']){
+            return searchByName($validatedData['name'],'user');
+        }else if ($request['name'] == null && ($request['start'] && $request['end']) )
+        {
+            return searchByDate($validatedData['start'],$validatedData['end'],'user');
+        }else if($request['name'] == null && $request['start'] == null && $request['end'] == null)
+            return response()->json(['status'=>false]);
+        $user = User::whereBetween('created_at',array($validatedData['start'], $validatedData['end']))->
+        where('name','LIKE','%'.$validatedData['name'].'%')->
+        where('role','user')->
+        get();
 
         return response()->json($user);
     }
 
 
     public function getVendors(){
-        $vendors = User::where('role','vendor')->with('pharmacy')->paginate(20);
+        $vendors = User::where('role','vendor')->where('active',1)->with('pharmacy')->paginate(20);
 
         return response()->json($vendors);
     }
 
-    public function searchVendorByName($name){
-        $vendor = User::where('name','LIKE','%'.$name.'%')->where('role','vendor')->get();
 
-        return response()->json($vendor);
-    }
 
     public function searchUserById($id){
 
@@ -51,6 +58,53 @@ class UserController extends Controller
 
     }
 
+    public function searchVendor(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'nullable',
+            'start' => 'date_format:"Y-m-d"|nullable',
+            'end' => 'date_format:"Y-m-d"|nullable',
+        ]);
+
+        if( ($request['start'] == null || $request['end'] == null) && $request['name']){
+            return searchByName($validatedData['name'],'vendor');
+        }else if ($request['name'] == null && ($request['start'] && $request['end']) )
+        {
+            return searchByDate($validatedData['start'],$validatedData['end'],'vendor');
+        }else if($request['name'] == null && $request['start'] == null && $request['end'] == null)
+            return response()->json(['status'=>false]);
+        $user = User::whereBetween('created_at',array($validatedData['start'], $validatedData['end']))->
+        where('name','LIKE','%'.$validatedData['name'].'%')->
+        where('role','vendor')->
+        get();
+
+        return response()->json($user);
+    }
+
+    public function searchPending(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'nullable',
+            'start' => 'date_format:"Y-m-d"|nullable',
+            'end' => 'date_format:"Y-m-d"|nullable',
+        ]);
+
+        if( ($request['start'] == null || $request['end'] == null) && $request['name']){
+            return Pharmacy::whereHas('user' , function($q) use ($request){
+                $q->where('name','LIKE','%'.$request['name'].'%')->where('role','vendor')->where('active',0);
+            })->with('user')->paginate(20);
+        }else if ($request['name'] == null && ($request['start'] && $request['end']) )
+        {
+            return Pharmacy::whereHas('user' , function($q) use ($request){
+                $q->whereBetween('created_at',array($request['start'], $request['end']))->where('role','vendor')->where('active',0);
+            })->with('user')->paginate(20);        }else if($request['name'] == null && $request['start'] == null && $request['end'] == null)
+            return response()->json(['status'=>false]);
+
+            return Pharmacy::whereHas('user' , function($q) use ($request){
+                $q->whereBetween('created_at',array($request['start'], $request['end']))->
+                 where('name','LIKE','%'.$request['name'].'%')->
+                 where('role','vendor')->
+                 where('active',0);
+            })->with('user')->paginate(20);
+    }
     public function searchVendorById($id){
         $user = User::where('role','vendor')->find($id);
         $pharmacy = Pharmacy::where('user_id',$user->id)->withCount('order')->get();

@@ -74,7 +74,8 @@ class PharmacyController extends Controller
 
     public function getPendingPharmacy(){
         $pharmacy = Pharmacy::whereHas("user", function($q){
-            $q->where("active","=",0);
+            $q->where("active","=",0)->
+            where('role','vendor');
          })->with('user')->paginate(20);
         return response()->json($pharmacy,200);
     }

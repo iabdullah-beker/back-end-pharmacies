@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 use App\Order;
+use App\Pharmacy;
 
 class OrderController extends Controller
 {
@@ -91,6 +92,8 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
+
+
     public function getOrderForUser(){
         $orders = auth()->user()->order;
         return response()->json($orders);
@@ -173,4 +176,10 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
+    //by Pharmacy ID
+    public function getOrderPharmacy($id){
+
+        $orders = Order::where('pharmacy_id',$id)->paginate(20);
+        return response()->json($orders);
+    }
 }
