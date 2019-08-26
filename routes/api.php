@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::post('/searchvendor', 'Api\UserController@searchVendor');
     Route::post('/searchpending', 'Api\UserController@searchPending');
     Route::get('/getorderpharmacy/{id}', 'Api\OrderController@getOrderPharmacy');
+    Route::get('/getorderpharmacybyuserid/{id}', 'Api\OrderController@getOrderPharmacyByUserId');
 
 });
 
