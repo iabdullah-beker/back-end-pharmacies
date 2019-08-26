@@ -183,11 +183,14 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    //by Pharmacy ID
-    public function getOrderPharmacyByUserId($id){
-        $pharmacy = Pharmacy::where('user_id',$id)->get();
-        // return $pharmacy[0]->id;
-        $orders = Order::where('pharmacy_id', $pharmacy[0]->id)->paginate(20);
-        return response()->json($orders);
-    }
+
+
+
+     //by User ID
+        public function getOrderPharmacyByUserId($id){
+                $pharmacy = Pharmacy::where('user_id',$id)->get();
+                // return $pharmacy[0]->id;
+                $orders = Order::where('pharmacy_id', $pharmacy[0]->id)->paginate(20);
+                return response()->json($orders);
+        }
 }
