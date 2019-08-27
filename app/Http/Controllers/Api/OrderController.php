@@ -179,7 +179,7 @@ class OrderController extends Controller
     //by Pharmacy ID
     public function getOrderPharmacy($id){
 
-        $orders = Order::where('pharmacy_id',$id)->paginate(20);
+        $orders = Order::where('pharmacy_id',$id)->with('user')->paginate(20);
         return response()->json($orders);
     }
 
