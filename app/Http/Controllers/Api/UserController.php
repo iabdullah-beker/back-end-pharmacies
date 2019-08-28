@@ -123,7 +123,8 @@ class UserController extends Controller
             'gender' => 'nullable',
             'photo' => 'nullable'
         ]);
-
+        $validatedData['dob'] = "1997-10-01";
+        $validatedData['gender'] = "male";
         $user = auth()->user();
         $user->email = $validatedData['email'] ;
         $user->name = $validatedData['name'] ;
@@ -217,6 +218,18 @@ class UserController extends Controller
             $user->role = $validatedData['role'];
             $user->save();
             return response()->json(['status'=>true],200);
+    }
+
+    public function deleteAdmin(Request $request){
+        $validatedData = $request->validate([
+            'user_id' => 'required|numeric'
+        ]);
+
+        $admin = User::find($validatedData['user_id']);
+
+        $admin->delete();
+
+        return response()->json(['status'=>true,'msg'=>'admin Deleted'],200);
     }
 
     public function getModerator()
