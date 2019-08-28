@@ -34,7 +34,16 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('updatedata' , 'Api\UserController@updateData');
     Route::post('changepassword' , 'Api\UserController@changePassword');
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        $user = auth()->user();
+        if(auth()->user()->role == 'vendor')
+        {
+            $user->pharmacy;
+            return response()->json(['user'=>$user],200);
+
+        }
+
+        return auth()->user();
+
     });
 });
 
@@ -57,7 +66,8 @@ Route::group(['middleware' => ['auth:api', 'scope:user']], function () {
     Route::post('/addcomplaint', 'Api\ComplaintController@addComplaint');
     Route::post('/addrate', 'Api\RateController@addRate');
     Route::post('/nearest' , 'Api\PharmacyController@findNearestPharmacy');
-
+    Route::post('/addproduct' , 'Api\ProductController@addProduct');
+    Route::get('/getproduct' , 'Api\ProductController@getProduct');
 });
 
 
@@ -121,6 +131,7 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
 // Admin Routes
 Route::group(['middleware' => ['auth:api', 'scope:admin']], function () {
     Route::post('/addadmin', 'Api\UserController@addAdmin');
+    Route::post('/deleteadmin', 'Api\UserController@deleteAdmin');
     Route::post('/updaterole', 'Api\UserController@updateRole');
     Route::get('/getadmin', 'Api\UserController@getAdmin');
     Route::get('/getmoderator', 'Api\UserController@getModerator');
