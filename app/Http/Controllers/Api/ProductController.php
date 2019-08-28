@@ -18,7 +18,8 @@ class ProductController extends Controller
         ]);
 
         $user = auth()->user();
-        $validatedData['price'] = $validatedData['price'] * $validatedData['count'];
+        // if($request['price'] && $request['count'])
+        $validatedData['price'] = $request['price'] * $request['count'];
         $product = $user->product()->create($validatedData);
         return response()->json(['status'=>true,'data'=>$product],201);
     }
