@@ -45,6 +45,11 @@ class User extends Authenticatable
     public function ads (){
         return $this->hasMany(Ad::class);
     }
+
+    public function product(){
+        return $this->hasMany(Product::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
