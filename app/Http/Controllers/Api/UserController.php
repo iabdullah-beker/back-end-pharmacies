@@ -192,7 +192,7 @@ class UserController extends Controller
             'password_confirmation' => 'required',
             'name' => 'required',
             'address' => 'required',
-            'phone' => 'numeric|min:11|required',
+            'phone' => 'numeric|min:11|required|unique:users',
             // 'dob' => 'date_format:"Y-m-d"|required',
             'gender' => 'nullable',
             'photo' => 'nullable',

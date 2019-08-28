@@ -21,7 +21,7 @@ class AuthController extends Controller
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'address' => 'required',
-            'phone' => 'numeric|min:11|required',
+            'phone' => 'numeric|min:11|required|unique:users',
             'disease' => 'nullable',
             'dob' => 'date_format:"Y-m-d"|required',
             'gender' => 'required',

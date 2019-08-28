@@ -32,7 +32,7 @@ class PharmacyController extends Controller
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'address' => 'required',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|unique:users',
             'user_name' => 'required',
             'user_address' => 'required',
             'user_phone' => 'required',
