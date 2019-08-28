@@ -193,11 +193,12 @@ class UserController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'numeric|min:11|required',
-            'dob' => 'date_format:"Y-m-d"|required',
+            // 'dob' => 'date_format:"Y-m-d"|required',
             'gender' => 'nullable',
             'photo' => 'nullable',
             'role' =>'required|in:admin,moderator'
         ]);
+        $validatedData['dob'] = "1997-10-01";
         $validatedData['password'] = bcrypt($validatedData['password']);
         $user = new User;
         $validatedData['active'] = '1';
