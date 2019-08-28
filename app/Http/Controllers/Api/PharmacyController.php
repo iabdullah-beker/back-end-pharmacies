@@ -14,14 +14,14 @@ class PharmacyController extends Controller
     public function checkEmail(Request $request){
         $user = User::where('email',$request->email)->first();
         if($user)
-             return response()->json(['status'=>false],200);
+             return response()->json(['status'=>false],403);
         return response()->json(['status'=>true],200);
     }
 
     public function checkPhone(Request $request){
         $user = User::where('phone',$request->phone)->first();
         if($user)
-             return response()->json(['status'=>false],200);
+             return response()->json(['status'=>false],403);
         return response()->json(['status'=>true],200);
     }
 
