@@ -124,7 +124,7 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/getorderpharmacy/{id}', 'Api\OrderController@getOrderPharmacy');
 
     Route::get('/getorderpharmacybyuserid/{id}' , 'Api\OrderController@getOrderPharmacyByUserId');
-
+    Route::get('getgroups' , 'Api\GroupController@getGroups');
 });
 
 

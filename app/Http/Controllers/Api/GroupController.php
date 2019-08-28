@@ -29,4 +29,10 @@ class GroupController extends Controller
         $groups = Category::find($id)->groups;
         return response()->json($groups,200);
     }
+
+    public function getGroups(){
+        $groups = Group::all();
+
+        return response()->json($groups,200);
+    }
 }
