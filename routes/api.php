@@ -38,7 +38,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         if(auth()->user()->role == 'vendor')
         {
             $user->pharmacy;
-            return response()->json(['user'=>$user],200);
+            return response()->json($user,200);
 
         }
 
