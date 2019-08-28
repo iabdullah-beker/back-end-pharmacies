@@ -123,17 +123,17 @@ class UserController extends Controller
             'gender' => 'nullable',
             'photo' => 'nullable'
         ]);
-        $validatedData['dob'] = "1997-10-01";
-        $validatedData['gender'] = "male";
+        $request['dob'] = "1997-10-01";
+        $request['gender'] = "male";
         $user = auth()->user();
-        $user->email = $validatedData['email'] ;
-        $user->name = $validatedData['name'] ;
-        $user->address = $validatedData['address'] ;
-        $user->phone = $validatedData['phone'] ;
-        $user->disease = $validatedData['disease'] ;
-        $user->dob = $validatedData['dob'] ;
-        $user->gender = $validatedData['gender'] ;
-        $user->photo = $validatedData['photo'] ;
+        $user->email = $request['email'] ;
+        $user->name = $request['name'] ;
+        $user->address = $request['address'] ;
+        $user->phone = $request['phone'] ;
+        $user->disease = $request['disease'] ;
+        $user->dob = $request['dob'] ;
+        $user->gender = $request['gender'] ;
+        $user->photo = $request['photo'] ;
         $user->save();
 
         return response()->json(['status'=>true,'data'=>$user]);
