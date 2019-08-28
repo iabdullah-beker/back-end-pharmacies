@@ -118,10 +118,10 @@ class UserController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'numeric|min:11|required',
-            'disease' => 'required',
-            'dob' => 'date_format:"Y-m-d"|required',
-            'gender' => 'required',
-            'photo' => 'required'
+            'disease' => 'nullable',
+            'dob' => 'date_format:"Y-m-d"|nullable',
+            'gender' => 'nullable',
+            'photo' => 'nullable'
         ]);
 
         $user = auth()->user();
