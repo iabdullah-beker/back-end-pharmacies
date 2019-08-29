@@ -9,8 +9,8 @@ class ProductController extends Controller
 {
     public function addProduct(Request $request){
         $validatedData = $request->validate([
-            'data' => 'required',
-            'image' => 'required',
+            'data' => 'nullable',
+            'image' => 'nullable',
             'count' => 'nullable|integer',
             'price' => 'nullable|numeric',
             'product_id' => 'nullable|integer',

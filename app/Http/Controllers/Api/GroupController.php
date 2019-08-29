@@ -31,8 +31,7 @@ class GroupController extends Controller
     }
 
     public function getGroups(){
-        $groups = Group::all();
-
+        $groups = Group::with('category')->get();
         return response()->json($groups,200);
     }
 }

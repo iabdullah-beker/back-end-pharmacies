@@ -15,7 +15,7 @@ class OrderController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'image'=>'required|max:2048',
+            'image'=>'required|max:4096',
             'image.*' => 'mimes:jpeg,png,jpg,gif,svg'
         ]);
         $insert = array();
