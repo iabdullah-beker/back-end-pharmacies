@@ -38,7 +38,7 @@ class CosmeticController extends Controller
     }
 
     public function getCosmetics(){
-        $cosmetics = Cosmetic::get(['id','name']);
+        $cosmetics = Cosmetic::with('group')->get();
 
         return response()->json($cosmetics,200);
     }
