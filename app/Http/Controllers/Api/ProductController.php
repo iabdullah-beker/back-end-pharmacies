@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Product;
 
 class ProductController extends Controller
 {
@@ -30,5 +31,29 @@ class ProductController extends Controller
         $products = $user->product()->get();
         $price = $user->product()->sum('price');
         return response()->json(['price'=>$price,'cart'=>$products],200);
+    }
+
+    public function updateProduct(Request $request){
+        $validatedData = $request->validate([
+            'count' => 'required|integer',
+            'id' => 'required|integer'
+        ]);
+
+            $product = Product::find($validatedData['id']);
+            $count = $product->count;
+            $product->count = $validatedData['count'];
+            $product->price = $product->price / $count;
+            $product->price = $product->price * $validatedData['count'] ;
+            $product->save();
+            return response()->json($product,200);
+
+    }
+    public function deleteProduct(Request $request){
+        $validatedData = $request->validate([
+            'id' => 'required|integer'
+        ]);
+        $product = Product::find($validatedData['id']);
+        $product->delete();
+        return response()->json(['status'=>true,'msg'=>'product deleted']);
     }
 }

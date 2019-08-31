@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth:api', 'scope:user']], function () {
     Route::post('/nearest' , 'Api\PharmacyController@findNearestPharmacy');
     Route::post('/addproduct' , 'Api\ProductController@addProduct');
     Route::get('/getproduct' , 'Api\ProductController@getProduct');
+    Route::post('/updateproduct' , 'Api\ProductController@updateProduct');
+    Route::post('/deleteproduct' , 'Api\ProductController@deleteProduct');
 });
 
 

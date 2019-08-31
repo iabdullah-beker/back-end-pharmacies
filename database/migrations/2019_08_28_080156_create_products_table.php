@@ -16,7 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('data')->nullable();
-            $table->string('image')->nullable();
+            $table->longText('image')->nullable();
             $table->enum('type',['med','cosmetic','package'])->default('med');
             $table->integer('count')->default(1);
             $table->unsignedBigInteger('user_id');
