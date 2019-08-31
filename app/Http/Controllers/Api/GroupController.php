@@ -31,7 +31,7 @@ class GroupController extends Controller
     }
 
     public function getGroups(){
-        $groups = Group::with('category')->get();
+        $groups = Group::with('category')->paginate(20);
         return response()->json($groups,200);
     }
 }
