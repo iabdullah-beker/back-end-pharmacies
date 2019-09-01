@@ -131,9 +131,9 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/getcosmetics', 'Api\CosmeticController@getCosmetics');
     Route::get('/getcosmeticsgroup', 'Api\CosmeticController@getCosmeticsGroup');
     Route::get('/getpharmacies' , 'Api\PharmacyController@getPharmacies');
-    Route::get('/deletecosmetic', 'Api\CosmeticController@deleteCosmetics');
-    Route::get('deletegroup' , 'Api\GroupController@deleteGroups');
-    Route::get('deletepackage' , 'Api\PackageController@deletePackage');
+    Route::post('/deletecosmetic', 'Api\CosmeticController@deleteCosmetic');
+    Route::post('deletegroup' , 'Api\GroupController@deleteGroup');
+    Route::post('deletepackage' , 'Api\PackageController@deletePackage');
 
 });
 
