@@ -35,6 +35,11 @@ class GroupController extends Controller
         return response()->json($groups,200);
     }
 
+    public function getGroupsCosmetic(){
+        $groups = Group::with('category')->get();
+        return response()->json($groups,200);
+    }
+
     public function deleteGroup(Request $request){
         $validatedData = $request->validate([
             'id' => 'required'
