@@ -43,6 +43,12 @@ class CosmeticController extends Controller
         return response()->json($cosmetics,200);
     }
 
+    public function getCosmeticsGroup(){
+        $cosmetics = Cosmetic::with('group')->get();
+
+        return response()->json($cosmetics,200);
+    }
+
     public function deleteCosmetic(Request $request){
         $validatedData = $request->validate([
             'id' => 'required'
