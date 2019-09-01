@@ -35,7 +35,7 @@ class PackageController extends Controller
 
     public function getPackagesWeb(){
 
-        $packages = Package::paginate(20);
+        $packages = Package::with('cosmetics')->with('pharmacy')->paginate(20);
         return response()->json($packages,200);
     }
 
