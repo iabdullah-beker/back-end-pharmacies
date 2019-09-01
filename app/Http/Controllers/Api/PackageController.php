@@ -33,6 +33,12 @@ class PackageController extends Controller
         return response()->json($packages,200);
     }
 
+    public function getPackagesWeb(){
+
+        $packages = Package::Paginate();
+        return response()->json($packages,200);
+    }
+
     public function getPackageData($id){
         // $cosmetics = array();
 

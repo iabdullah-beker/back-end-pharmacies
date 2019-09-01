@@ -134,6 +134,7 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::post('/deletecosmetic', 'Api\CosmeticController@deleteCosmetic');
     Route::post('deletegroup' , 'Api\GroupController@deleteGroup');
     Route::post('deletepackage' , 'Api\PackageController@deletePackage');
+    Route::get('/getpackagesweb' , 'Api\PackageController@getPackagesWeb');
 
 });
 
