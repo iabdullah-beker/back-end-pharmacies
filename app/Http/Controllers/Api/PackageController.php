@@ -35,16 +35,27 @@ class PackageController extends Controller
 
     public function getPackageData($id){
         // $cosmetics = array();
-        
+
         $package = Package::with('cosmetics')->find($id);
         if($package == null)
             return response()->json(['error' => 'package not found'], 404);
-        // $cosmetics = $package->cosmetics;     
-        // $cosmetic_ids = json_decode($packages['cosmetic_ids']); 
+        // $cosmetics = $package->cosmetics;
+        // $cosmetic_ids = json_decode($packages['cosmetic_ids']);
         // foreach ($cosmetic_ids as $cosmetic_id) {
         //     $cosmetic = Cosmetic::find($cosmetic_id);
         //     array_push($cosmetics, $cosmetic);
         // }
         return response()->json($package,200);
+    }
+
+    public function deletePackage(Request $request){
+        $validatedData = $request->validate([
+            'id' => 'required'
+        ]);
+
+        $package = Package::find($validatedData['id']);
+        $package->delete();
+
+        return response()->json(['status'=>true],200);
     }
 }

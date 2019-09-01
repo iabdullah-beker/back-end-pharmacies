@@ -31,6 +31,6 @@ class Order extends Model
     }
 
     protected $fillable = [
-        'order_type', 'address', 'image','name','pharmacy_id','phone'
+        'order_type', 'address', 'image','name','pharmacy_id','phone','price'
     ];
 }

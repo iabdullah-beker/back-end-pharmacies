@@ -34,4 +34,15 @@ class GroupController extends Controller
         $groups = Group::with('category')->paginate(20);
         return response()->json($groups,200);
     }
+
+    public function deleteGroup(Request $request){
+        $validatedData = $request->validate([
+            'id' => 'required'
+        ]);
+
+        $group = Group::find($validatedData['id']);
+        $group->delete();
+
+        return response()->json(['status'=>true],200);
+    }
 }

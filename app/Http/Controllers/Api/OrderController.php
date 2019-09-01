@@ -37,28 +37,54 @@ class OrderController extends Controller
     public function addOrder(Request $request){
        $orderData = $request->validate([
             'address'=>'required',
-            'image'=>'nullable',
-            'name'=>'nullable',
+            // 'image'=>'nullable',
+            // 'name'=>'nullable',
             'pharmacy_id'=>'required',
             'phone' => 'required',
-            'cosmetic' =>'nullable',
-            'package' =>'nullable',
+            // 'cosmetic' =>'nullable',
+            // 'package' =>'nullable',
         ]);
+
         // $orderData['image'] = json_decode($orderData['image']);
         // $order = new Order;
         $orderData['order_type'] = 'medication';
-       $order =  auth()->user()->order()->create($orderData);
 
-       if($request['cosmetic']!= null)
+        $user = auth()->user();
+        // return $user->product()->get();
+
+        $orderData['name'] = json_encode($user->product()->where('type','med')->get(['data'])) ;
+        $orderData['image'] = json_encode($user->product()->where('type','med')->get(['image']));
+
+        $orderData['cosmetic'] = json_encode($user->product()->where('type','cosmetic')
+        ->get(['product_id']));
+        $orderData['package'] = json_encode($user->product()->where('type','package')
+        ->get(['product_id']));
+
+        $orderData['price'] = $user->product->sum('price');
+        // return $orderData;
+        $order =  $user->order()->create($orderData);
+
+       if($orderData['cosmetic'] != null)
        {
-           $cosmetic_ids = json_decode($orderData['cosmetic']);
+        $cosmetic = json_decode($orderData['cosmetic']);
+        // return $cosmetic;
+        $cosmetic_ids = array();
+        foreach($cosmetic as $c){
+            $cosmetic_ids [] = $c->product_id;
+        }
+        //    $ = json_decode($orderData['cosmetic']);
 
            $order->cosmetics()->attach($cosmetic_ids);
        }
 
-       if($request['package'] != null)
+       if($orderData['package'] != null)
        {
-           $package_ids = json_decode($orderData['package']);
+        $package = json_decode($orderData['package']);
+
+        $package_ids = array();
+        foreach($package as $p){
+            $package_ids [] = $p->product_id;
+        }
 
            $order->packages()->attach($package_ids);
        }

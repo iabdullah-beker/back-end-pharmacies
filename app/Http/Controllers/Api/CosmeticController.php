@@ -38,8 +38,19 @@ class CosmeticController extends Controller
     }
 
     public function getCosmetics(){
-        $cosmetics = Cosmetic::with('group')->get();
+        $cosmetics = Cosmetic::with('group')->paginate(20);
 
         return response()->json($cosmetics,200);
+    }
+
+    public function deleteCosmetic(Request $request){
+        $validatedData = $request->validate([
+            'id' => 'required'
+        ]);
+
+        $cosmetic = Cosmetic::find($validatedData['id']);
+        $cosmetic->delete();
+
+        return response()->json(['status'=>true],200);
     }
 }
