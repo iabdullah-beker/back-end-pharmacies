@@ -35,7 +35,7 @@ class PackageController extends Controller
 
     public function getPackagesWeb(){
 
-        $packages = Package::Paginate();
+        $packages = Package::Paginate(20);
         return response()->json($packages,200);
     }
 
