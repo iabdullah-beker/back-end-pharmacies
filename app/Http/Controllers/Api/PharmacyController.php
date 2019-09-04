@@ -92,7 +92,6 @@ class PharmacyController extends Controller
             'lng' => 'required|numeric',
         ]);
 
-
         $lat = $validatedData['lat'] ;
         $lng = $validatedData['lng'];
         $distance = 5;

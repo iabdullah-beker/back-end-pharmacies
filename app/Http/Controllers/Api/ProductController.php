@@ -18,6 +18,14 @@ class ProductController extends Controller
             'type' =>'required|in:med,cosmetic,package'
         ]);
 
+        $product = Product::where('product_id',$request['product_id'])->first();
+        if($product){
+            $product->count += $request['count'];
+            $product->price += ($request['price'] * $request['count']);
+            $product->save();
+
+            return response()->json(['status'=>true,'msg'=>'product count updated']);
+        }
         $user = auth()->user();
         // if($request['price'] && $request['count'])
         $validatedData['price'] = $request['price'] * $request['count'];

@@ -50,13 +50,13 @@ function isModerator($user)
 // search
 
  function searchByName($name , $role){
-    $vendor = User::where('name','LIKE','%'.$name.'%')->where('role',$role)->get();
+    $vendor = User::where('name','LIKE','%'.$name.'%')->where('role',$role)->paginate(20);;
 
     return response()->json($vendor);
 }
 
  function searchByDate($start,$end , $role){
-    $user = User::whereBetween('created_at',array($start, $end))->where('role',$role)->get();
+    $user = User::whereBetween('created_at',array($start, $end))->where('role',$role)->paginate(20);;
 
     return response()->json($user);
 }

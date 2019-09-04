@@ -37,12 +37,8 @@ class OrderController extends Controller
     public function addOrder(Request $request){
        $orderData = $request->validate([
             'address'=>'required',
-            // 'image'=>'nullable',
-            // 'name'=>'nullable',
             'pharmacy_id'=>'required',
             'phone' => 'required',
-            // 'cosmetic' =>'nullable',
-            // 'package' =>'nullable',
         ]);
 
         // $orderData['image'] = json_decode($orderData['image']);

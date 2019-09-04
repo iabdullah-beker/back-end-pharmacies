@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 header('Access-Control-Allow-Origin: *');
 //Access-Control-Allow-Origin: *
 header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
@@ -29,6 +30,15 @@ Route::post('/checkphone','Api\PharmacyController@checkPhone');
 //    return response()->json($order);
 // });
 // All Routes
+
+Route::get('testitem',function(){
+    $currentMonth = date('m');
+$data = DB::table("orders")
+        ->whereMonth('created_at', Carbon::now()->month-1)
+        ->whereDay('created_at', Carbon::now()->day)
+        ->count();
+return ([Carbon::now()->month => $data]);
+});
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('logout', 'Api\UserController@logout');
     Route::post('updatedata' , 'Api\UserController@updateData');
