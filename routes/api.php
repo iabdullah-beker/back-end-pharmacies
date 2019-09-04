@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth:api', 'scope:vendor']], function () {
     Route::post('/addalarm' , 'Api\AlarmController@addAlarm');
     Route::get('/getorderwithratevendor', 'Api\RateController@getOrdersWithRateForVendor');
     Route::post('updatepharmacy' , 'Api\UserController@updatePharmacyData');
-
+    Route::get('getvendorstatistics','Api\StatisticsController@getStatisticsForVendor');
 });
 
 // Moderator Routes
