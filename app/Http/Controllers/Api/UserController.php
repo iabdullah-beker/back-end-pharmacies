@@ -36,6 +36,7 @@ class UserController extends Controller
         $user = User::whereBetween('created_at',array($validatedData['start'], $validatedData['end']))->
         where('name','LIKE','%'.$validatedData['name'].'%')->
         where('role','user')->
+        withCount('order')->
         paginate(20);
 
         return response()->json($user);
@@ -75,6 +76,8 @@ class UserController extends Controller
         $user = User::whereBetween('created_at',array($validatedData['start'], $validatedData['end']))->
         where('name','LIKE','%'.$validatedData['name'].'%')->
         where('role','vendor')->
+        where('active',1)->
+        with('pharmacy')->
         paginate(20);
 
         return response()->json($user);

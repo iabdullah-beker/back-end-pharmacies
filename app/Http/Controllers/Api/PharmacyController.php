@@ -94,7 +94,7 @@ class PharmacyController extends Controller
 
         $lat = $validatedData['lat'] ;
         $lng = $validatedData['lng'];
-        $distance = 5;
+        $distance = 10;
 
         $data = Pharmacy::getByDistance($lat,$lng,$distance);
 
