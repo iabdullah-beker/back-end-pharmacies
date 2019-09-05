@@ -50,4 +50,11 @@ class GroupController extends Controller
 
         return response()->json(['status'=>true],200);
     }
+
+    public function getGroupById($id){
+        $group = Group::find($id);
+        $cosmetics = $group->cosmetics()->paginate(20);
+
+        return response()->json(['group'=>$group,'cosmetics'=>$cosmetics],200);
+    }
 }

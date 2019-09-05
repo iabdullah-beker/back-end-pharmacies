@@ -64,4 +64,18 @@ class PackageController extends Controller
 
         return response()->json(['status'=>true],200);
     }
+
+    public function getPackageById($id){
+        $package = Package::find($id);
+
+        $pharmacy = $package->pharmacy()->paginate(20);
+
+        $cosmetics = $package->cosmetics()->paginate(20);
+
+        return response()->json([
+            'package'=>$package,
+            'pharmacy'=>$pharmacy,
+            'cosmetics'=>$cosmetics
+        ],200);
+    }
 }
