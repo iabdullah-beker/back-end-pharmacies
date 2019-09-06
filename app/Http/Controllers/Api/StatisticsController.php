@@ -67,7 +67,7 @@ class StatisticsController extends Controller
             ->whereDay('created_at', $i)
             ->where('pharmacy_id',$pharmacy->id)
             ->count();
-            $ordersCountThisMonth [] = ['d'.$i => $count];
+            $ordersCountThisMonth [] = [$count];
         }
 
         $ordersCountLastMonth = array(); // Last month
@@ -77,7 +77,7 @@ class StatisticsController extends Controller
             ->whereDay('created_at', $i)
             ->where('pharmacy_id',$pharmacy->id)
             ->count();
-            $ordersCountLastMonth [] = ['d'.$i => $count];
+            $ordersCountLastMonth [] = [$count];
         }
 
         $lastOrders = Order::where('pharmacy_id',$pharmacy->id)->orderBy('id', 'desc')->take(10)->get();
