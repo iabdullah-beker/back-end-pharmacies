@@ -133,7 +133,10 @@ class OrderController extends Controller
             return response()->json(['failed'=>'your pharmacy not active right now '],404);
         }
         $pharmacy_id = auth()->user()->pharmacy->id;
-        $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','3')->get();
+        $orders = Order::where('pharmacy_id',$pharmacy_id)
+        ->with('cosmetics')
+        ->with('packages')
+        ->where('status','3')->get();
         return response()->json($orders,200);
     }
 

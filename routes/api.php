@@ -146,10 +146,9 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::post('deletepackage' , 'Api\PackageController@deletePackage');
     Route::get('/getpackagesweb' , 'Api\PackageController@getPackagesWeb');
     Route::get('groupbyid/{id}' , 'Api\GroupController@getGroupById');
-    Route::get('/getpackagebyid/{id}' , 'Api\PackageController@getPackageById');
+    Route::get('/getpackagepharmacybyid/{id}' , 'Api\PackageController@getPackagePharmacyById');
+    Route::get('/getpackagecosmeticbyid/{id}' , 'Api\PackageController@getPackageCosmeticById');
     Route::get('getadmintatistics','Api\StatisticsController@getStatisticsForAdmin');
-
-
 
 });
 
