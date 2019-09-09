@@ -81,7 +81,7 @@ class StatisticsController extends Controller
             $ordersCountLastMonth [] = [$count];
         }
 
-        $lastOrders = Order::where('pharmacy_id',$pharmacy->id)->orderBy('id', 'desc')->take(10)->get();
+        $lastOrders = Order::where('pharmacy_id',$pharmacy->id)->with('user')->orderBy('id', 'desc')->take(10)->get();
 
         $head = array(
             "accepted" => $accepted,
