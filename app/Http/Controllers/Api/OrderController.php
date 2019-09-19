@@ -85,19 +85,23 @@ class OrderController extends Controller
            $order->packages()->attach($package_ids);
        }
        $fullData = null;
-        if($order->cosmetics != null){
+        if(!$order->cosmetics != null){
             if($order->packages !=null){
-             $fullData = Order::with('cosmetics')->with('packages')->find($order->id);
+             $fullData = Order::with('cosmetics')->with('packages')->with('user')->find($order->id);
             }
         }
-        else if($order->packages != null)
+        else if(!$order->packages != null)
         {
-            $fullData = Order::with('packages')->find($order->id);
+            $fullData = Order::with('packages')->with('user')->find($order->id);
         }
         else {
             $fullData = $order;
+            $fullData->user;
         }
         // sendNotification($orderData);
+        $fullData->name = json_decode($fullData->name);
+        $fullData->image = json_decode($fullData->image);
+        // return ($fullData);
         pushOrderNotification($fullData);
         // return response()->json([$order->packages,$order->cosmetics],200);
         return response()->json($fullData,201);
@@ -115,6 +119,19 @@ class OrderController extends Controller
         ->with('packages')
         ->with('user')
         ->paginate(20);
+        for($i = 0 ; $i<count($orders);$i++){
+          $orders[$i]->name = json_decode($orders[$i]->name);
+          $orders[$i]->image = json_decode($orders[$i]->image);
+        }
+
+          // foreach ($orders as $order) {
+          //       for($j = 0 ; $j < count($order->name) ; $j++){
+          //           $order->name[$j]->data = json_decode($order->name[$j]->data);
+          //           $order->image[$j]->image = json_decode($order->image[$j]->image);
+          //     }
+          // }
+
+
         return response()->json($orders);
     }
 
@@ -122,12 +139,24 @@ class OrderController extends Controller
 
     public function getOrderForUser(){
         $orders = auth()->user()->order;
+        for($i = 0 ; $i<count($orders);$i++){
+          $orders[$i]->name = json_decode($orders[$i]->name);
+          $orders[$i]->image = json_decode($orders[$i]->image);
+        }
         return response()->json($orders);
     }
 
     public function getAllOrdersForAdmin(){
-        $orders = Order::with('pharmacy')->with('user')->paginate(20);
+        $orders = Order::with('pharmacy')
+        ->with('package')
+        ->with('cosmetic')
+        ->with('user')
+        ->paginate(20);
         // $orders->name = json_decode($orders->name);
+        for($i = 0 ; $i<count($orders);$i++){
+          $orders[$i]->name = json_decode($orders[$i]->name);
+          $orders[$i]->image = json_decode($orders[$i]->image);
+        }
         return response()->json($orders,200);
     }
 
@@ -142,6 +171,10 @@ class OrderController extends Controller
         ->with('packages')
         ->with('user')
         ->where('status','3')->get();
+        for($i = 0 ; $i<count($orders);$i++){
+          $orders[$i]->name = json_decode($orders[$i]->name);
+          $orders[$i]->image = json_decode($orders[$i]->image);
+        }
         return response()->json($orders,200);
     }
 
@@ -154,7 +187,12 @@ class OrderController extends Controller
         ->with('cosmetics')
         ->with('packages')
         ->with('user')
-        ->where('status','4')->get();
+        ->where('status','4')
+        ->paginate(20);
+        for($i = 0 ; $i<count($orders);$i++){
+          $orders[$i]->name = json_decode($orders[$i]->name);
+          $orders[$i]->image = json_decode($orders[$i]->image);
+        }
         return response()->json($orders,200);
     }
 
@@ -170,6 +208,10 @@ class OrderController extends Controller
             ->with('user')
             ->where('status','1')
             ->paginate(20);
+            for($i = 0 ; $i<count($orders);$i++){
+              $orders[$i]->name = json_decode($orders[$i]->name);
+              $orders[$i]->image = json_decode($orders[$i]->image);
+            }
             return response()->json($orders,200);
         }
 
@@ -185,6 +227,10 @@ class OrderController extends Controller
         ->with('user')
         ->where('status','2')
         ->paginate(20);
+        for($i = 0 ; $i<count($orders);$i++){
+          $orders[$i]->name = json_decode($orders[$i]->name);
+          $orders[$i]->image = json_decode($orders[$i]->image);
+        }
         return response()->json($orders,200);
     }
 
@@ -233,7 +279,15 @@ class OrderController extends Controller
     //by Pharmacy ID
     public function getOrderPharmacy($id){
 
-        $orders = Order::where('pharmacy_id',$id)->with('user')->paginate(20);
+        $orders = Order::where('pharmacy_id',$id)
+        ->with('package')
+        ->with('cosmetic')
+        ->with('user')
+        ->paginate(20);
+        for($i = 0 ; $i<count($orders);$i++){
+          $orders[$i]->name = json_decode($orders[$i]->name);
+          $orders[$i]->image = json_decode($orders[$i]->image);
+        }
         return response()->json($orders);
     }
 
@@ -241,7 +295,60 @@ class OrderController extends Controller
         public function getOrderPharmacyByUserId($id){
                 $pharmacy = Pharmacy::where('user_id',$id)->get();
                 // return $pharmacy[0]->id;
-                $orders = Order::where('pharmacy_id', $pharmacy[0]->id)->with('user')->paginate(20);
+                $orders = Order::where('pharmacy_id', $pharmacy[0]->id)
+                ->with('package')
+                ->with('cosmetic')
+                ->with('user')
+                ->paginate(20);
+                for($i = 0 ; $i<count($orders);$i++){
+                  $orders[$i]->name = json_decode($orders[$i]->name);
+                  $orders[$i]->image = json_decode($orders[$i]->image);
+                }
                 return response()->json($orders);
+        }
+
+
+
+        /* ADMIN SECTION */
+
+        public function getSuspendingOrderAdmin(){
+            $orders = Order::with('cosmetics')
+            ->with('packages')
+            ->with('user')
+            ->where('status','4')
+            ->paginate(20);
+            for($i = 0 ; $i<count($orders);$i++){
+              $orders[$i]->name = json_decode($orders[$i]->name);
+              $orders[$i]->image = json_decode($orders[$i]->image);
+            }
+            return response()->json($orders,200);
+        }
+
+            // when vendor open website , get the accepted orders that related to him!
+            public function getAcceptedOrderAdmin(){
+                $orders = Order::with('cosmetics')
+                ->with('packages')
+                ->with('user')
+                ->where('status','1')
+                ->paginate(20);
+                for($i = 0 ; $i<count($orders);$i++){
+                  $orders[$i]->name = json_decode($orders[$i]->name);
+                  $orders[$i]->image = json_decode($orders[$i]->image);
+                }
+                return response()->json($orders,200);
+            }
+
+                // when vendor open website , get the rejected orders that related to him!
+        public function getRejectedOrderAdmin(){
+            $orders = Order::with('cosmetics')
+            ->with('packages')
+            ->with('user')
+            ->where('status','2')
+            ->paginate(20);
+            for($i = 0 ; $i<count($orders);$i++){
+              $orders[$i]->name = json_decode($orders[$i]->name);
+              $orders[$i]->image = json_decode($orders[$i]->image);
+            }
+            return response()->json($orders,200);
         }
 }

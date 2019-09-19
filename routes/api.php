@@ -20,6 +20,9 @@ header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Autho
 
 Route::post('register', 'Api\AuthController@register');
 Route::post('login', 'Api\AuthController@login');
+Route::post('logindashboard', 'Api\AuthController@loginDashBoard');
+
+
 Route::post('/addpharmacy' , 'Api\PharmacyController@addPharmacy');
 Route::post('/checkemail','Api\PharmacyController@checkEmail');
 Route::post('/checkphone','Api\PharmacyController@checkPhone');
@@ -154,6 +157,9 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/getpackagecosmeticbyid/{id}' , 'Api\PackageController@getPackageCosmeticById');
     Route::get('getadmintatistics','Api\StatisticsController@getStatisticsForAdmin');
 
+    Route::get('/getacceptedorderadmin', 'Api\OrderController@getAcceptedOrderAdmin');
+    Route::get('/getrejectedorderadmin', 'Api\OrderController@getRejectedOrderAdmin');
+    Route::get('/getsuspendingorderadmin', 'Api\OrderController@getSuspendingOrderAdmin');
 });
 
 

@@ -41,9 +41,34 @@ class AuthController extends Controller
         $validatedData = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+            'token' => 'nullable'
         ]);
 
         if (Auth::attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])) {
+            $role = Auth::user()->role;
+            if($request['token']){
+              $user = Auth::user();
+              $user->token = $validatedData['token'];
+              $user->save();
+            }
+            $token = Auth::user()->createToken('My Token', [$role])->accessToken;
+            return response()->json(['status'=>true,'token' => $token], 200);
+        } else {
+            return response()->json(['status'=> false], 401);
+        }
+    }
+
+
+    public function loginDashBoard(Request $request)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt(['email' => $validatedData['email'], 'password' => $validatedData['password']])) {
+          if(Auth::user()->role == 'user')
+              return response()->json(['status'=> false,'msg'=>'user not allowed to login here!'], 401);
             $role = Auth::user()->role;
             $token = Auth::user()->createToken('My Token', [$role])->accessToken;
             return response()->json(['status'=>true,'token' => $token], 200);
