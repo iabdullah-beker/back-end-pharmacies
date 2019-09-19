@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Package;
 use function GuzzleHttp\json_decode;
 use App\Cosmetic;
+use Illuminate\Support\Facades\DB;
 
 class PackageController extends Controller
 {
@@ -41,6 +42,8 @@ class PackageController extends Controller
         $pharmacy_ids = json_decode($validatedPackage['pharmacy_ids']);
         // $package = auth()->user()->package()->create($validatedPackage);
         $package  = Package::find($validatedPackage['package_id']);
+        if(!$package)
+        return response()->json(['status'=>'false','msg'=>'error!!'],403);
 
         if($request['name'])
         $package->name = $request['name'];
@@ -48,20 +51,16 @@ class PackageController extends Controller
         $package->price = $request['price'];
         if($request['image'])
         $package->image = $request['image'];
-
         $package->save();
-        $cosmetics = $package->cosmetics()->get();
-        $pharmacies = $package->pharmacy()->get();
-
-        foreach ($cosmetics as $cosmetic) {
-          $cosmetic->delete();
-        }
-        foreach ($pharmacies as $pharmacy) {
-          $pharmacy->delete();
-        }
-
+        // $package->cosmetics()->detach();
+        // $package->pharmacy()->detach();
+        // $package->delete();
+        DB::table('cosmetic_package')->where('package_id' , $validatedPackage['package_id'])->delete();
+        DB::table('package_pharmacy')->where('package_id' , $validatedPackage['package_id'])->delete();
         $package->cosmetics()->attach($cosmetic_ids);
         $package->pharmacy()->attach($pharmacy_ids);
+        $package->cosmetics;
+        $package->pharmacy;
         return response()->json($package,201);
     }
 
