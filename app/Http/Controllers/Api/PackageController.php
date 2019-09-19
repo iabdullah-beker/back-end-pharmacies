@@ -27,6 +27,44 @@ class PackageController extends Controller
         return response()->json($package,201);
     }
 
+    public function updatePackage(Request $request){
+        $validatedPackage = $request->validate([
+            'name' => 'nullable',
+            'price' => 'nullable|numeric',
+            'image' => 'nullable',
+            'pharmacy_ids' => 'required',
+            'cosmetic_ids' => 'required',
+            'package_id' => 'required'
+        ]);
+
+        $cosmetic_ids = json_decode($validatedPackage['cosmetic_ids']);
+        $pharmacy_ids = json_decode($validatedPackage['pharmacy_ids']);
+        // $package = auth()->user()->package()->create($validatedPackage);
+        $package  = Package::find($validatedPackage['package_id']);
+
+        if($request['name'])
+        $package->name = $request['name'];
+        if($request['price'])
+        $package->price = $request['price'];
+        if($request['image'])
+        $package->image = $request['image'];
+
+        $package->save();
+        $cosmetics = $package->cosmetics()->get();
+        $pharmacies = $package->pharmacy()->get();
+
+        foreach ($cosmetics as $cosmetic) {
+          $cosmetic->delete();
+        }
+        foreach ($pharmacies as $pharmacy) {
+          $pharmacy->delete();
+        }
+
+        $package->cosmetics()->attach($cosmetic_ids);
+        $package->pharmacy()->attach($pharmacy_ids);
+        return response()->json($package,201);
+    }
+
     public function getPackages(){
 
         $packages = Package::all();

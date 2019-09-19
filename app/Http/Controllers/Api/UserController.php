@@ -129,13 +129,21 @@ class UserController extends Controller
         $request['dob'] = "1997-10-01";
         $request['gender'] = "male";
         $user = auth()->user();
+        if($request['email'])
         $user->email = $request['email'] ;
+        if($request['name'])
         $user->name = $request['name'] ;
+        if($request['address'])
         $user->address = $request['address'] ;
+        if($request['phone'])
         $user->phone = $request['phone'] ;
+        if($request['disease'])
         $user->disease = $request['disease'] ;
+        if($request['dob'])
         $user->dob = $request['dob'] ;
+        if($request['gender'])
         $user->gender = $request['gender'] ;
+        if($request['photo'])
         $user->photo = $request['photo'] ;
         $user->save();
 
@@ -247,6 +255,19 @@ class UserController extends Controller
         $admins = User::where('role','admin')->paginate(20);
 
         return response()->json($admins,200);
+    }
+
+
+    public function addToken (Request $request){
+        $validatedToken = $request->validate([
+                'token' => "required"
+            ]);
+
+            $user = auth()->user();
+            $user->token = $validatedToken['token'];
+            $user->save();
+
+            return response()->json($user,200);
     }
 
     public function logout() {

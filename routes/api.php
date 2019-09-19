@@ -43,6 +43,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('logout', 'Api\UserController@logout');
     Route::post('updatedata' , 'Api\UserController@updateData');
     Route::post('changepassword' , 'Api\UserController@changePassword');
+    Route::post('addtoken' , 'Api\UserController@addToken');
+
     Route::get('/user', function (Request $request) {
         $user = auth()->user();
         if(auth()->user()->role == 'vendor')
@@ -93,6 +95,7 @@ Route::group(['middleware' => ['auth:api', 'scope:vendor']], function () {
     Route::get('/getacceptedordervendor', 'Api\OrderController@getAcceptedOrder');
     Route::get('/getrejectedordervendor', 'Api\OrderController@getRejectedOrder');
     Route::get('/getpendingorder', 'Api\OrderController@getPendingOrder');
+    Route::get('/getsuspendingorder', 'Api\OrderController@getSuspendingOrder');
     Route::post('/acceptorder', 'Api\OrderController@onAcceptOrder');
     Route::post('/rejectorder', 'Api\OrderController@onRejectOrder');
     Route::post('/pharmacynotavailible', 'Api\PharmacyController@pharmacyNotAvailible');
@@ -118,6 +121,7 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::post('/rejectads' , 'Api\AdsController@RejectAds');
     Route::get('/pendingads' , 'Api\AdsController@getPendingAds');
     Route::post('/addpackage' , 'Api\PackageController@addPackage');
+    Route::post('/updatepackage' , 'Api\PackageController@updatePackage');
     Route::post('/addads' , 'Api\AdsController@addAds');
     Route::post('/addcategory', 'Api\CategoryController@addCategory');
     Route::post('/addgroup', 'Api\GroupController@addGroup');

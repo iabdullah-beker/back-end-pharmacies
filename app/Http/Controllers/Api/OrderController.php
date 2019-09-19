@@ -110,7 +110,11 @@ class OrderController extends Controller
         $pharmacy = auth()->user()->pharmacy;
         if(!$pharmacy)
         return response()->json(['error'=>'this user not related to pharmacy']);
-        $orders = $pharmacy->order()->with('user')->paginate(20);
+        $orders = $pharmacy->order()
+        ->with('cosmetics')
+        ->with('packages')
+        ->with('user')
+        ->paginate(20);
         return response()->json($orders);
     }
 
@@ -136,7 +140,21 @@ class OrderController extends Controller
         $orders = Order::where('pharmacy_id',$pharmacy_id)
         ->with('cosmetics')
         ->with('packages')
+        ->with('user')
         ->where('status','3')->get();
+        return response()->json($orders,200);
+    }
+
+    public function getSuspendingOrder(){
+        if(!auth()->user()->active) {
+            return response()->json(['failed'=>'your pharmacy not active right now '],404);
+        }
+        $pharmacy_id = auth()->user()->pharmacy->id;
+        $orders = Order::where('pharmacy_id',$pharmacy_id)
+        ->with('cosmetics')
+        ->with('packages')
+        ->with('user')
+        ->where('status','4')->get();
         return response()->json($orders,200);
     }
 
@@ -146,7 +164,12 @@ class OrderController extends Controller
                 return response()->json(['failed'=>'your pharmacy not active right now '],404);
             }
             $pharmacy_id = auth()->user()->pharmacy->id;
-            $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','1')->paginate(20);
+            $orders = Order::where('pharmacy_id',$pharmacy_id)
+            ->with('cosmetics')
+            ->with('packages')
+            ->with('user')
+            ->where('status','1')
+            ->paginate(20);
             return response()->json($orders,200);
         }
 
@@ -156,7 +179,12 @@ class OrderController extends Controller
             return response()->json(['failed'=>'your pharmacy not active right now '],404);
         }
         $pharmacy_id = auth()->user()->pharmacy->id;
-        $orders = Order::where('pharmacy_id',$pharmacy_id)->where('status','2')->paginate(20);
+        $orders = Order::where('pharmacy_id',$pharmacy_id)
+        ->with('cosmetics')
+        ->with('packages')
+        ->with('user')
+        ->where('status','2')
+        ->paginate(20);
         return response()->json($orders,200);
     }
 
@@ -168,6 +196,7 @@ class OrderController extends Controller
         $validatedData = $request->validate([
             'order_id'=>'required|integer',
             'price' => 'required',
+            'alarm' => 'required',
         ]);
 
         $order = Order::find($validatedData['order_id']);
@@ -207,9 +236,6 @@ class OrderController extends Controller
         $orders = Order::where('pharmacy_id',$id)->with('user')->paginate(20);
         return response()->json($orders);
     }
-
-
-
 
      //by User ID
         public function getOrderPharmacyByUserId($id){

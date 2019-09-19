@@ -19,12 +19,11 @@ class ProductController extends Controller
         ]);
 
         $product = Product::where('product_id',$request['product_id'])->first();
-        if($product){
+        if($product && ( $validatedData['type'] == 'cosmetic' || $validatedData['type'] == 'package' )){
             $product->count += $request['count'];
             $product->price += ($request['price'] * $request['count']);
             $product->save();
-
-            return response()->json(['status'=>true,'msg'=>'product count updated']);
+            return response()->json(['status'=>true,'data'=>$product]);
         }
         $user = auth()->user();
         // if($request['price'] && $request['count'])
@@ -35,10 +34,24 @@ class ProductController extends Controller
 
     public function getProduct(){
         $user = auth()->user();
-
         $products = $user->product()->get();
         $price = $user->product()->sum('price');
-        return response()->json(['price'=>$price,'cart'=>$products],200);
+        $data = [];
+        $images = [];
+        // foreach ($products as $product) {
+        //   if($product->type == 'med'){
+        //       array_push($data,$product->data);
+        //       array_push($images,$product->image);
+        //   }
+        // }
+        for($i = 0 ; $i < count($products) ; $i++){
+          if($products[$i]->type == 'med'){
+              array_push($data,$products[$i]->data);
+              array_push($images,$products[$i]->image);
+          }
+          // $products[$i]->price = $products[$i]->price * $products[$i]->count;
+        }
+        return response()->json(['price'=>$price,'cart'=>$products,'data'=>$data,'images'=>$images],200);
     }
 
     public function updateProduct(Request $request){
