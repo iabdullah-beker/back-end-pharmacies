@@ -148,8 +148,8 @@ class OrderController extends Controller
 
     public function getAllOrdersForAdmin(){
         $orders = Order::with('pharmacy')
-        ->with('package')
-        ->with('cosmetic')
+        ->with('packages')
+        ->with('cosmetics')
         ->with('user')
         ->paginate(20);
         // $orders->name = json_decode($orders->name);
@@ -243,12 +243,23 @@ class OrderController extends Controller
             'order_id'=>'required|integer',
             'price' => 'required',
             'alarm' => 'required',
+            'time' => 'required'
         ]);
 
         $order = Order::find($validatedData['order_id']);
         $order->status = '1';
         $order->price = $validatedData['price'];
         $order->save();
+        $pharmacy = $order->pharmacy;
+        $details = array(
+          'pharmacyName' => $pharmacy->name,
+          'price' => $order->price,
+          'tips' => $validatedData['alarm'],
+          'time' => $validatedData['time']
+        );
+        $token = $order->user->token;
+        // return $token;
+        pushToMobile('Your order has been accepted','order in his way',$details,$token);
         return response()->json(['success'=>'order accepted successfully'],200);
     }
     // on reject order
@@ -272,7 +283,11 @@ class OrderController extends Controller
 
 
     public function getOrderByUserId($id){
-        $orders = Order::where('user_id',$id)->paginate(20);
+        $orders = Order::where('user_id',$id)
+        ->with('packages')
+        ->with('cosmetics')
+        ->with('user')
+        ->paginate(20);
         return response()->json($orders);
     }
 
@@ -280,8 +295,8 @@ class OrderController extends Controller
     public function getOrderPharmacy($id){
 
         $orders = Order::where('pharmacy_id',$id)
-        ->with('package')
-        ->with('cosmetic')
+        ->with('packages')
+        ->with('cosmetics')
         ->with('user')
         ->paginate(20);
         for($i = 0 ; $i<count($orders);$i++){
@@ -296,8 +311,8 @@ class OrderController extends Controller
                 $pharmacy = Pharmacy::where('user_id',$id)->get();
                 // return $pharmacy[0]->id;
                 $orders = Order::where('pharmacy_id', $pharmacy[0]->id)
-                ->with('package')
-                ->with('cosmetic')
+                 ->with('packages')
+                ->with('cosmetics')
                 ->with('user')
                 ->paginate(20);
                 for($i = 0 ; $i<count($orders);$i++){

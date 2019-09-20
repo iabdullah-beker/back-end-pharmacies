@@ -1,7 +1,10 @@
 <?php
 
 use App\User;
-
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use FCM;
 function getCreat($query)
 {
 
@@ -87,7 +90,7 @@ function pushOrderNotification($order)
 {
     $url = "https://fcm.googleapis.com/fcm/send";
     $token = ["c2B5BvYNEUg:APA91bFe6Qy0yaV1eWtWMQ3jkwzF1PnKMR_oScvs0LobTdPnwtMVTN44E1Kh2tj4T0Kmhc-rVYB3rgVyap3X2302KDaSTZVHCDDKzueJlwKgC58FEtJBTaDXaqLtV5xV_oBCzlcGQVZe"];
-    $serverKey = 'AAAAkT5ZT9A:APA91bEbd0juuIpm0S_5rYwhLpZhGoPgurzevvOIKB_u9v_X3jgQU6dDyq1oa6cBFNMKP_WepaWdhgvohghY32h87hfkpFN5oQP531-tsS3zR2q-nBgeYj4WKoRPhpH91HhS69NVVqP0';
+    $serverKey = 'AAAAEEt0owI:APA91bEsRA8e38KKWmKYo8kA7iEijgP_igRReSxRVo-Q-xNzpUxVadvDxxvKw1sqI841telT2JV1-ljzQsuQj4fyDoArgvq8vK3RZxc0CIaSrF7fWsIO3GuLcl3nGCBL0v9za0O4QePm';
     // $body = "Hello I am from Your php server";
     $link = env('APP_FRONT_END');
     $notification = array(
@@ -114,36 +117,43 @@ function pushOrderNotification($order)
     curl_close($ch);
 }
 
-function pushTips($tip)
+function pushToMobile($title,$body,$details,$token)
 {
-    $url = "https://fcm.googleapis.com/fcm/send";
-    $token = ["c2B5BvYNEUg:APA91bFe6Qy0yaV1eWtWMQ3jkwzF1PnKMR_oScvs0LobTdPnwtMVTN44E1Kh2tj4T0Kmhc-rVYB3rgVyap3X2302KDaSTZVHCDDKzueJlwKgC58FEtJBTaDXaqLtV5xV_oBCzlcGQVZe"];
-    $serverKey = 'AAAAkT5ZT9A:APA91bEbd0juuIpm0S_5rYwhLpZhGoPgurzevvOIKB_u9v_X3jgQU6dDyq1oa6cBFNMKP_WepaWdhgvohghY32h87hfkpFN5oQP531-tsS3zR2q-nBgeYj4WKoRPhpH91HhS69NVVqP0';
-    // $body = "Hello I am from Your php server";
-    $link = env('APP_FRONT_END');
-    $notification = array(
-        'title' => 'you got new order', 'body' => 'please click on alert to get the order before reject after 3 minutes', "icon" => "http://localhost:3000/favicon.ico", 'sound' => 'default',    'order' => $tip
-    );
-    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high');
-    $json = json_encode($arrayToSend);
-    $headers = array();
-    $headers[] = 'Content-Type: application/json';
-    $headers[] = 'Authorization: key=' . $serverKey;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //prevent return
+    $optionBuilder = new OptionsBuilder();
+    $optionBuilder->setTimeToLive(60*20);
 
-    //Send the request
-    curl_exec($ch);
-    // //Close request
-    // if ($response === FALSE) {
-    //     die('FCM Send Error: ' . curl_error($ch));
-    // }
-    curl_close($ch);
+    $notificationBuilder = new PayloadNotificationBuilder($title);
+    $notificationBuilder->setBody($body)
+    				    ->setSound('default');
+
+    $dataBuilder = new PayloadDataBuilder();
+    $dataBuilder->addData($details);
+
+    $option = $optionBuilder->build();
+    $notification = $notificationBuilder->build();
+    $data = $dataBuilder->build();
+
+    // $token = "a_registration_from_your_database";
+
+    $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+
+    $downstreamResponse->numberSuccess();
+    $downstreamResponse->numberFailure();
+    $downstreamResponse->numberModification();
+
+    // return Array - you must remove all this tokens in your database
+    $downstreamResponse->tokensToDelete();
+
+    // return Array (key : oldToken, value : new token - you must change the token in your database)
+    $downstreamResponse->tokensToModify();
+
+    // return Array - you should try to resend the message to the tokens in the array
+    $downstreamResponse->tokensToRetry();
+
+    // return Array (key:token, value:error) - in production you should remove from your database the tokens
+    $downstreamResponse->tokensWithError();
 }
+
 
 function crypto($length)
 {
