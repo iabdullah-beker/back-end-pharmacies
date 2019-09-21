@@ -47,10 +47,23 @@ class OrderController extends Controller
 
         $user = auth()->user();
         // return $user->product()->get();
+        $data = $user->product()->where('type','med')->get(['data']);
+        $image = $user->product()->where('type','med')->get(['image']);
+        $names = [];
+        $images = [];
+        for($i = 0 ;$i <count($data) ; $i++){
+            $nm = json_decode($data[$i]->data);
+            for($j = 0 ;$j < count($nm) ; $j++)
+                array_push($names,$nm[$j]);
+        }
 
-        $orderData['name'] = json_encode($user->product()->where('type','med')->get(['data'])) ;
-        $orderData['image'] = json_encode($user->product()->where('type','med')->get(['image']));
-
+          for($i = 0 ;$i <count($image) ; $i++){
+            $im = json_decode($image[$i]->image);
+            for($j = 0 ;$j < count($im) ; $j++)
+                array_push($images,$im[$j]);
+        }
+        $orderData['name'] = json_encode($names) ;
+        $orderData['image'] = json_encode($images);
         $orderData['cosmetic'] = json_encode($user->product()->where('type','cosmetic')
         ->get(['product_id']));
         $orderData['package'] = json_encode($user->product()->where('type','package')
@@ -99,10 +112,13 @@ class OrderController extends Controller
             $fullData->user;
         }
         // sendNotification($orderData);
+        $pharmacy =Pharmacy::find($orderData['pharmacy_id']);
+        $token = $pharmacy->user->token;
+     //   return $token;
         $fullData->name = json_decode($fullData->name);
         $fullData->image = json_decode($fullData->image);
         // return ($fullData);
-        pushOrderNotification($fullData);
+        pushOrderNotification($fullData,$token);
         // return response()->json([$order->packages,$order->cosmetics],200);
         return response()->json($fullData,201);
     }
@@ -365,5 +381,18 @@ class OrderController extends Controller
               $orders[$i]->image = json_decode($orders[$i]->image);
             }
             return response()->json($orders,200);
+        }
+
+        public function onNotResponseOrder(Request $request){
+          $validatedData = $request->validate([
+            'order_id' => 'required'
+          ]);
+
+          $order = Order::find($validatedData['order_id']);
+          $order->status = 4;
+          $order->save();
+
+          return response()->json($orders,200);
+
         }
 }

@@ -88,7 +88,10 @@ class StatisticsController extends Controller
         ->orderBy('id', 'desc')
         ->take(10)
         ->get();
-
+        for($i = 0 ; $i<count($lastOrders);$i++){
+          $lastOrders[$i]->name = json_decode($lastOrders[$i]->name);
+          $lastOrders[$i]->image = json_decode($lastOrders[$i]->image);
+        }
         $head = array(
             "accepted" => $accepted,
             "rejected" => $rejected,

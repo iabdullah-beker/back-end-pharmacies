@@ -107,6 +107,8 @@ Route::group(['middleware' => ['auth:api', 'scope:vendor']], function () {
     Route::get('/getorderwithratevendor', 'Api\RateController@getOrdersWithRateForVendor');
     Route::post('updatepharmacy' , 'Api\UserController@updatePharmacyData');
     Route::get('getvendorstatistics','Api\StatisticsController@getStatisticsForVendor');
+    Route::post('/noresponseorder', 'Api\OrderController@onNotResponseOrder');
+    
 });
 
 // Moderator Routes
@@ -160,6 +162,8 @@ Route::group(['middleware' => ['auth:api', 'scope:moderator,admin']], function (
     Route::get('/getacceptedorderadmin', 'Api\OrderController@getAcceptedOrderAdmin');
     Route::get('/getrejectedorderadmin', 'Api\OrderController@getRejectedOrderAdmin');
     Route::get('/getsuspendingorderadmin', 'Api\OrderController@getSuspendingOrderAdmin');
+
+
 });
 
 

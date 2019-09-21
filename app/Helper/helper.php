@@ -86,17 +86,17 @@ function isModerator($user)
 
 
 
-function pushOrderNotification($order)
+function pushOrderNotification($order,$token)
 {
     $url = "https://fcm.googleapis.com/fcm/send";
-    $token = ["c2B5BvYNEUg:APA91bFe6Qy0yaV1eWtWMQ3jkwzF1PnKMR_oScvs0LobTdPnwtMVTN44E1Kh2tj4T0Kmhc-rVYB3rgVyap3X2302KDaSTZVHCDDKzueJlwKgC58FEtJBTaDXaqLtV5xV_oBCzlcGQVZe"];
+
     $serverKey = 'AAAAEEt0owI:APA91bEsRA8e38KKWmKYo8kA7iEijgP_igRReSxRVo-Q-xNzpUxVadvDxxvKw1sqI841telT2JV1-ljzQsuQj4fyDoArgvq8vK3RZxc0CIaSrF7fWsIO3GuLcl3nGCBL0v9za0O4QePm';
     // $body = "Hello I am from Your php server";
     $link = env('APP_FRONT_END');
     $notification = array(
         'title' => 'you got new order', 'body' => 'please click on alert to get the order before reject after 3 minutes', "click_action" => $link, "icon" => "http://localhost:3000/favicon.ico", 'sound' => 'default',    'order' => $order
     );
-    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high');
+    $arrayToSend = array('registration_ids' => [$token], 'notification' => $notification, 'priority' => 'high');
     $json = json_encode($arrayToSend);
     $headers = array();
     $headers[] = 'Content-Type: application/json';
